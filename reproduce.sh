@@ -13,9 +13,10 @@ echo "==> Running offline unit and Playwright integration tests"
 uv run pytest -v
 
 if [[ -n "${GOOGLE_API_KEY:-}" ]]; then
-  echo "==> GOOGLE_API_KEY detected; running live Gemini 3.5 Flash Lite benchmark (3 runs/group)"
+  echo "==> GOOGLE_API_KEY detected; running full Gemini 3.5 Flash Lite benchmark (3 runs/group)"
   uv run python -m devbooks_agent.benchmark --runs 3
 else
-  echo "==> GOOGLE_API_KEY not set; skipping live Gemini 3.5 Flash Lite benchmark."
-  echo "    Export GOOGLE_API_KEY and re-run ./reproduce.sh to reproduce live agent numbers."
+  echo "==> GOOGLE_API_KEY not set; running offline Playwright v1/v2 benchmark (3 runs/group)"
+  uv run python -m devbooks_agent.benchmark --runs 3 --groups playwright_v1 playwright_v2 --no-judge-demo
+  echo "    Export GOOGLE_API_KEY and re-run ./reproduce.sh to reproduce live Gemini 3.5 Flash Lite runs."
 fi
